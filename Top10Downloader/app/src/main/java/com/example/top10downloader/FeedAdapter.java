@@ -17,6 +17,7 @@ public class FeedAdapter extends ArrayAdapter {
     private final int layoutResource;
     private final LayoutInflater layoutInflater;
     private List<FeedEntry> applications;
+    View convertView;
 
     public FeedAdapter(Context context, int resource, List<FeedEntry> applications) {
         super(context, resource, applications);
@@ -33,15 +34,36 @@ public class FeedAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = layoutInflater.inflate(layoutResource, parent, false);
-        TextView tvName = (TextView) view.findViewById(R.id.tvName);
-        TextView tvArtist = (TextView) view.findViewById(R.id.tvArtist);
-        TextView tvSummary = (TextView) view.findViewById(R.id.tvSummary);
+        ViewHolder viewHolder;
+
+        if(convertView == null){
+            convertView = layoutInflater.inflate(layoutResource, parent, false);
+
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        }else
+            viewHolder = (ViewHolder) convertView.getTag();
+
+//        TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
+//        TextView tvArtist = (TextView) convertView.findViewById(R.id.tvArtist);
+//        TextView tvSummary = (TextView) convertView.findViewById(R.id.tvSummary);
 
         FeedEntry currentApp = applications.get(position);
-        tvName.setText(currentApp.getName());
-        tvArtist.setText(currentApp.getArtist());
-        tvSummary.setText(currentApp.getSummary());
-        return view;
+        viewHolder.tvName.setText(currentApp.getName());
+        viewHolder.tvArtist.setText(currentApp.getArtist());
+        viewHolder.tvSummary.setText(currentApp.getSummary());
+        return convertView;
+    }
+
+    private class ViewHolder{
+        final TextView tvName;
+        final TextView tvArtist;
+        final TextView tvSummary;
+
+        ViewHolder(View v){
+            this.tvName = v.findViewById(R.id.tvName);
+            this.tvArtist = v.findViewById(R.id.tvArtist);
+            this.tvSummary = v.findViewById(R.id.tvSummary);
+        }
     }
 }
